@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 //import css and font-awesome and bootstrap file
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
-import 'jquery/dist/jquery.min.js'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // import external Component 
 import RightSideBar from './Component/RightSideBar';
 import LeftSideBar from './Component/LeftSideBar';
@@ -278,7 +276,6 @@ function App() {
             handleDetailS={handleDetailS}
             detailPage={detailPage}
           />
-          {/* <Text /> */}
         </div>
       </div>
     </div>

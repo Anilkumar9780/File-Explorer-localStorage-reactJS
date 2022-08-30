@@ -6,6 +6,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Dialog } from '@material-ui/core';
+import SearchBar from "material-ui-search-bar";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export default function RightSideBar({
   // get the props 
@@ -22,6 +24,8 @@ export default function RightSideBar({
   handleDetailS,
   detailPage
 }) {
+  const [allFoldres, setAllFolders] = useState(data);
+  const [searched, setSearched] = useState("");
   const [number, setNumber] = useState(1);
   const [folderPerPage] = useState(3);
 
@@ -43,14 +47,38 @@ export default function RightSideBar({
 
   useEffect(() => {
     setNumber(number);
+    setAllFolders(currentFolders);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [number, setNumber]);
 
+  /**
+   * search Folders (name)
+   * @param {event} event
+   */
+  const handleOnSearchFolderName = (searchedVal) => {
+    const filteredFolders = data.filter((folders) => {
+      return folders.name.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    setAllFolders(filteredFolders);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    handleOnSearchFolderName(searched);
+  };
   return (
     <div>
       <div className="card sider-folder-show contniner">
+        <SearchBar
+          style={{ height: '40px', padding: '-300px', backgroundColor: "#999999" }}
+          className='serachbar'
+          value={searched}
+          onChange={(searchVal) => handleOnSearchFolderName(searchVal)}
+          onCancelSearch={() => cancelSearch()}
+        />
         {!show ? (
           <div className="card-body rows4" style={{ flexWrap: 'wrap' }}>
-            {currentFolders.map((items) => {
+            {allFoldres.map((items) => {
               return <div key={items.id} className="card col-md-5" align='left' style={{ width: '12rem', height: "200px", marginLeft: "40px", backgroundColor: '#666666' }}>
                 <div className="card-body">
                   <div className="text-center text-black">
@@ -117,32 +145,40 @@ export default function RightSideBar({
                 </div>
               </div>
             })}
-            <div className="menu-nav">
-              <div className="dropdown-container" tabIndex="-1">
-                <div className="fa fa-plus text-black  pointer" style={{ fontSize: '100px', marginLeft: '50px', marginTop: '40px' }} />
-                <div className="dropdown">
-                  <div>
-                    <div
-                      className="nav-link mt-1 btns"
-                      onClick={handleOpenCreateFolderFrom}
-                    >
-                      <FontAwesomeIcon icon={faFolderPlus} />
-                      {' '}
-                      New Folder
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      className="nav-link mt-1 btns"
-                      onClick={handleOpenFileUploadFrom}
-                    >
-                      <FontAwesomeIcon icon={faFileUpload} />
-                      {' '}
-                      File Upload
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <ContextMenuTrigger id="same_unique_identifier">
+                <div className="fa fa-plus-circle text-black  pointer"
+                  style={{
+                    fontSize: '120px',
+                    marginLeft: '60px',
+                    marginTop: '-20px'
+                  }} />
+              </ContextMenuTrigger>
+              <ContextMenu id="same_unique_identifier"
+                style={{
+                  width: '120px',
+                  height: '100px',
+                  backgroundColor: ' #262727',
+                  borderRadius: '3px',
+                  padding: '7px',
+                  textAlign: 'center',
+                  cursor: 'pointer'
+                }}>
+                <MenuItem onClick={handleOpenCreateFolderFrom}>
+                  <FontAwesomeIcon icon={faFolderPlus} />
+                  {' '}
+                  New Folder
+                </MenuItem>
+                <MenuItem>
+                  <div style={{ padding: '5px' }} />
+                </MenuItem>
+                <MenuItem onClick={handleOpenFileUploadFrom}>
+                  <FontAwesomeIcon icon={faFileUpload} />
+                  {' '}
+                  File Upload
+                </MenuItem>
+                <MenuItem divider />
+              </ContextMenu>
             </div>
           </div>
         ) : (
@@ -208,32 +244,40 @@ export default function RightSideBar({
                 </div>
               </div>
             })}
-            <div className="menu-nav">
-              <div className="dropdown-container" tabIndex="-1" >
-                <div className="fa fa-plus text-black  pointer" style={{ fontSize: '100px', marginLeft: '60px', marginTop: '40px' }} />
-                <div className="dropdown">
-                  <div>
-                    <div
-                      className="nav-link mt-1 btns"
-                      onClick={handleOpenCreateFolderFrom}
-                    >
-                      <FontAwesomeIcon icon={faFolderPlus} />
-                      {' '}
-                      New Folder
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      className="nav-link mt-1 btns"
-                      onClick={handleOpenFileUploadFrom}
-                    >
-                      <FontAwesomeIcon icon={faFileUpload} />
-                      {' '}
-                      File Upload
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <ContextMenuTrigger id="same_unique_identifier">
+                <div className="fa fa-plus-circle text-black  pointer"
+                  style={{
+                    fontSize: '120px',
+                    marginLeft: '60px',
+                    marginTop: '-20px'
+                  }} />
+              </ContextMenuTrigger>
+              <ContextMenu id="same_unique_identifier"
+                style={{
+                  width: '120px',
+                  height: '100px',
+                  backgroundColor: ' #262727',
+                  borderRadius: '3px',
+                  padding: '7px',
+                  textAlign: 'center',
+                  cursor: 'pointer'
+                }}>
+                <MenuItem onClick={handleOpenCreateFolderFrom}>
+                  <FontAwesomeIcon icon={faFolderPlus} />
+                  {' '}
+                  New Folder
+                </MenuItem>
+                <MenuItem>
+                  <div style={{ padding: '5px' }} />
+                </MenuItem>
+                <MenuItem onClick={handleOpenFileUploadFrom}>
+                  <FontAwesomeIcon icon={faFileUpload} />
+                  {' '}
+                  File Upload
+                </MenuItem>
+                <MenuItem divider />
+              </ContextMenu>
             </div>
           </div>
         )}
