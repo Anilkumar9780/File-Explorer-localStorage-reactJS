@@ -16,15 +16,17 @@ export default function RightSideBar({
   handleOpenCreateFolderFrom,
   handleOpenFileUploadFrom,
   folderNested,
+  setFolderNested,
   handleClickNestedFolders,
   show,
   onRename,
   openModel,
   handleCancelFrom,
   handleDetailS,
-  detailPage
+  detailPage,
+  folderId
 }) {
-  const [allFoldres, setAllFolders] = useState(data);
+  const [allFoldres, setAllFolders] = useState([]);
   const [searched, setSearched] = useState("");
   const [number, setNumber] = useState(1);
   const [folderPerPage] = useState(3);
@@ -34,9 +36,9 @@ export default function RightSideBar({
    */
   const lastFolder = number * folderPerPage;
   const firsFolder = lastFolder - folderPerPage;
-  const currentFolders = data.slice(firsFolder, lastFolder);
+  const currentFolders = allFoldres.slice(firsFolder, lastFolder);
   const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(data.length / folderPerPage); i += 1) {
+  for (let i = 1; i <= Math.ceil(allFoldres.length / folderPerPage); i += 1) {
     pageNumber.push(i);
   }
 
@@ -47,28 +49,41 @@ export default function RightSideBar({
 
   useEffect(() => {
     setNumber(number);
-    setAllFolders(currentFolders);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [number, setNumber]);
+    setAllFolders(data);
+  }, [number, setNumber, data, folderNested, setFolderNested]);
 
   /**
    * search Folders (name)
    * @param {event} event
    */
   const handleOnSearchFolderName = (searchedVal) => {
-    const filteredFolders = data.filter((folders) => {
-      return folders.name.toLowerCase().includes(searchedVal.toLowerCase());
-    });
-    setAllFolders(filteredFolders);
+    if (!folderId) {
+      const filteredFolders = data.filter((folders) => {
+        return folders.name.toLowerCase().includes(searchedVal.toLowerCase());
+      });
+      setAllFolders(filteredFolders);
+    } else {
+      const nestedfilters = folderNested.filter((nestedfilter) => {
+        return nestedfilter.name.toLowerCase().includes(searchedVal.toLowerCase());
+      });
+      setFolderNested(nestedfilters);
+    }
   };
 
   const cancelSearch = () => {
     setSearched("");
     handleOnSearchFolderName(searched);
   };
+
   return (
     <div>
       <div className="card sider-folder-show contniner">
+        {/* <button
+          className={`${number === 1 ? ('px-3 py-1 m-1 text-center btn btn-primary pointer fa fa-arrrow disabled') : ('px-3 py-1 m-1 text-center btn btn-primary pointer')}`}
+          type="button"
+          onClick={() => setNumber((numbers) => (numbers === 1 ? numbers : numbers - 1))}
+        /> */}
+                {/* search bar  */}
         <SearchBar
           style={{ height: '40px', padding: '-300px', backgroundColor: "#999999" }}
           className='serachbar'
@@ -78,7 +93,8 @@ export default function RightSideBar({
         />
         {!show ? (
           <div className="card-body rows4" style={{ flexWrap: 'wrap' }}>
-            {allFoldres.map((items) => {
+            {/* parent folders map  */}
+            {currentFolders.map((items) => {
               return <div key={items.id} className="card col-md-5" align='left' style={{ width: '12rem', height: "200px", marginLeft: "40px", backgroundColor: '#666666' }}>
                 <div className="card-body">
                   <div className="text-center text-black">
@@ -128,6 +144,7 @@ export default function RightSideBar({
                         </div>
                       </div>
                     </div>
+                    {/* onclick detail button then model open menu  */}
                     <Dialog open={detailPage} onClose={handleCancelFrom}>
                       <DialogTitle>Details</DialogTitle>
                       <DialogContent>
@@ -145,32 +162,19 @@ export default function RightSideBar({
                 </div>
               </div>
             })}
+            {/* right click plus icon open menu */}
             <div>
               <ContextMenuTrigger id="same_unique_identifier">
-                <div className="fa fa-plus-circle text-black  pointer"
-                  style={{
-                    fontSize: '120px',
-                    marginLeft: '60px',
-                    marginTop: '-20px'
-                  }} />
+                <div className="fa fa-plus-circle text-black  pointer rightplus" />
               </ContextMenuTrigger>
-              <ContextMenu id="same_unique_identifier"
-                style={{
-                  width: '120px',
-                  height: '100px',
-                  backgroundColor: ' #262727',
-                  borderRadius: '3px',
-                  padding: '7px',
-                  textAlign: 'center',
-                  cursor: 'pointer'
-                }}>
+              <ContextMenu id="same_unique_identifier" className='onrightclick'>
                 <MenuItem onClick={handleOpenCreateFolderFrom}>
                   <FontAwesomeIcon icon={faFolderPlus} />
                   {' '}
                   New Folder
                 </MenuItem>
                 <MenuItem>
-                  <div style={{ padding: '5px' }} />
+                  <div className='itemspadding' />
                 </MenuItem>
                 <MenuItem onClick={handleOpenFileUploadFrom}>
                   <FontAwesomeIcon icon={faFileUpload} />
@@ -183,6 +187,7 @@ export default function RightSideBar({
           </div>
         ) : (
           <div className="card-body rows4">
+            {/* map the children folders  */}
             {folderNested.map((items) => {
               return <div key={items.id} className="card col-md-2 " align='left' style={{ marginLeft: "40px", width: '11rem', height: "200px", backgroundColor: '#666666' }}>
                 <div className="card-body ">
@@ -228,6 +233,7 @@ export default function RightSideBar({
                       </div>
                     </div>
                   </p>
+                  {/* detail page open menu */}
                   <Dialog open={detailPage} onClose={handleCancelFrom}>
                     <DialogTitle>Details</DialogTitle>
                     <DialogContent>
@@ -245,24 +251,15 @@ export default function RightSideBar({
               </div>
             })}
             <div>
+              {/* right click plus icon open menu */}
               <ContextMenuTrigger id="same_unique_identifier">
-                <div className="fa fa-plus-circle text-black  pointer"
-                  style={{
-                    fontSize: '120px',
-                    marginLeft: '60px',
-                    marginTop: '-20px'
-                  }} />
+                <div className="fa fa-plus-circle text-black  pointer rightplus"
+                />
               </ContextMenuTrigger>
-              <ContextMenu id="same_unique_identifier"
-                style={{
-                  width: '120px',
-                  height: '100px',
-                  backgroundColor: ' #262727',
-                  borderRadius: '3px',
-                  padding: '7px',
-                  textAlign: 'center',
-                  cursor: 'pointer'
-                }}>
+              <ContextMenu
+                id="same_unique_identifier"
+                className='onrightclick'
+              >
                 <MenuItem onClick={handleOpenCreateFolderFrom}>
                   <FontAwesomeIcon icon={faFolderPlus} />
                   {' '}
@@ -281,7 +278,8 @@ export default function RightSideBar({
             </div>
           </div>
         )}
-        {currentFolders.length > 0 ? (
+        {/* load More button using pagination */}
+        {allFoldres.length > 0 ? (
           <div className="my-3 text-" style={{ marginLeft: '650px' }}>
             <button
               className={`${number === pageNumber.length ? ('px-3 py-1 m-1 text-center btn btn-#999999 border-0 text-#999999  disabled') : ('px-3 py-1 m-1 text-center text-black btn btn-#666666 border-0 pointer active')}`}

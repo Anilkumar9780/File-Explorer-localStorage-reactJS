@@ -231,8 +231,8 @@ function App() {
    * 
    * @param {Folder id} ids 
    */
-  const openModel = (fid) => {
-    setSelectFolderId(fid)
+  const openModel = (foldersid) => {
+    setSelectFolderId(foldersid)
   };
 
   return (
@@ -268,6 +268,7 @@ function App() {
             handleOpenCreateFolderFrom={handleOpenCreateFolderFrom}
             handleOpenFileUploadFrom={handleOpenFileUploadFrom}
             folderNested={folderNested}
+            setFolderNested={setFolderNested}
             show={show}
             handleClickNestedFolders={handleClickNestedFolders}
             openModel={openModel}
@@ -275,6 +276,7 @@ function App() {
             openCreateFolderFrom={openCreateFolderFrom}
             handleDetailS={handleDetailS}
             detailPage={detailPage}
+            folderId={folderId}
           />
         </div>
       </div>

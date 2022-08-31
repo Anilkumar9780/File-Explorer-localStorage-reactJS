@@ -15,10 +15,10 @@ export default function Navbar({
   handleOpenCreateFolderFrom,
   //Cancel button 
   handleCancelFrom,
-   //open create File Modle
-  openUploadFileFrom, 
+  //open create File Modle
+  openUploadFileFrom,
   handleOpenFileUploadFrom,
-   //hnadle Submit
+  //hnadle Submit
   handleSubmitFolders,
   handleSubmitFiles,
   //onChnage Input 
@@ -134,6 +134,7 @@ export default function Navbar({
             </Dialog>
             {/* File Uploading  name close*/}
           </span>
+          {/* sorting button by asc and Ascending and Descending */}
           <FormControl style={{ marginTop: '-18px' }}>
             <InputLabel>Sort By</InputLabel>
             <Select value={selected} onChange={selectionChangeHandler}>
