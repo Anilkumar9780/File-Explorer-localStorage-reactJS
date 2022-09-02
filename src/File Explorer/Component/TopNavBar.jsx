@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Select, MenuItem, FormHelperText, FormControl, InputLabel, Dialog } from '@material-ui/core';
+import { Dialog } from '@material-ui/core';
 
 export default function Navbar({
   //open create  Folder Modle
@@ -26,46 +26,13 @@ export default function Navbar({
   handleOnChangeFileUpload,
   //input value
   inputFolderName,
-  //get all Data
-  setGetFolders,
-  getFolders,
 }) {
-  const [selected, setSelected] = React.useState();
 
   /**
-   * 
-   * @param {event} event traget value in input box
+   *  reload the page 
    */
-  const selectionChangeHandler = (event) => {
-    setSelected(event.target.value);
-  };
-
-  /**
-   *  Sorting by Name Alphabetical orders
-   */
-  const sortByName = () => {
-    const ascendingByName = [...getFolders];
-    const sorts = ascendingByName.sort((a, b) => a.name.localeCompare(b.name));
-    setGetFolders(sorts);
-  }
-
-  /**
-  
-   * sorting by Name Ascending Orders
-   */
-  const sortAscending = () => {
-    const ascendingByName = [...getFolders];
-    const sorting = ascendingByName.sort((a, b) => a.name > b.name ? 1 : -1);
-    setGetFolders(sorting);
-  };
-
-  /**
-   * Sorting by Name Descending Oders
-   */
-  const sortDescending = () => {
-    const descendingByName = [...getFolders];
-    const sort = descendingByName.sort((a, b) => a.name > b.name ? -1 : 1);
-    setGetFolders(sort);
+  const onReload = () => {
+    window.location.reload(false);
   }
 
   return (
@@ -133,17 +100,13 @@ export default function Navbar({
               </DialogActions>
             </Dialog>
             {/* File Uploading  name close*/}
+            <button
+              onClick={onReload}
+              style={{ marginLeft:'10px',backgroundColor: ' #999999', border: '0px' }}
+            >
+              <i className='fa fa-refresh'></i>
+            </button>
           </span>
-          {/* sorting button by asc and Ascending and Descending */}
-          <FormControl style={{ marginTop: '-18px' }}>
-            <InputLabel>Sort By</InputLabel>
-            <Select value={selected} onChange={selectionChangeHandler}>
-              <MenuItem onClick={sortByName} value={1}>Name</MenuItem>
-              <MenuItem onClick={sortAscending} value={2}>Name(Asc)</MenuItem>
-              <MenuItem onClick={sortDescending} value={3}>Name(Desc)</MenuItem>
-            </Select>
-            <FormHelperText>Sort By Name</FormHelperText>
-          </FormControl>
         </div>
       </nav>
       {/* navbar top end */}

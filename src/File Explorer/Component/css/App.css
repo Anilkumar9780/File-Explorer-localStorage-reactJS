@@ -11,6 +11,7 @@
   background-color: #999999;
   /* margin: auto; */
   /* border: 5px; */
+  cursor: pointer;
 }
 
 .sider-show-folder-tree-contniner {
@@ -21,6 +22,7 @@
   margin-top: 10px;
   color: white;
   /* margin: auto; */
+  cursor: pointer;
 }
 
 .navbar-top {

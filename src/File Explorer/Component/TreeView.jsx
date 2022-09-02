@@ -6,7 +6,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 /**
  * display tree view using recursion
- * @param {TreeTtems} treeItems 
+ * @param {treeItems} treeItems 
  * @returns array
  */
 const getTreeItemsFromData = treeItems => {

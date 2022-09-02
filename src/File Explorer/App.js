@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-//import css and font-awesome and bootstrap file
+//import font-awesome and bootstrap file
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 // import external Component 
@@ -30,9 +30,9 @@ function App() {
   const [inputFileUpload, setInputFileUpload] = useState('');
   const [folderNested, setFolderNested] = useState('');
   const [show, setShow] = useState(false);
-  const [folderId, setFolderId] = useState('');
+  const [folderId, setFolderId] = useState();
   const [selectFolderId, setSelectFolderId] = useState();
-  
+
   /**
    * set getFolders in LocalStorage
    */
@@ -62,15 +62,15 @@ function App() {
     reader.onerror = () => {
       console.log(reader.error);
     };
-  }
-
+  };
+  
   /**
    * handle submit Folders add
    */
   const handleSubmitFolders = (keyss) => {
     //create objects
     const data = {
-      id: Math.floor(Math.random() * 100),
+      id: Math.floor(Math.random() * 1000),
       name: inputFolderName,
       date: new Date().toLocaleString(),
       type: 'Folder',
@@ -88,7 +88,7 @@ function App() {
           item.children.push(data);
         }
         if (item[keyss]) {
-          return handleSubmitFolders(item[keyss], keyss)
+          return handleSubmitFolders(item[keyss], keyss);
         }
         return 0;
       }, null);
@@ -101,12 +101,12 @@ function App() {
   }
 
   /**
-   * handle submit Folders add
+   * handle submit Files add
    */
   const handleSubmitFiles = (keyss) => {
     // create objects
     const file = {
-      id: Math.floor(Math.random() * 100),
+      id: Math.floor(Math.random() * 1000),
       file: inputFileUpload,
       date: new Date().toLocaleString(),
       type: 'File',
@@ -124,7 +124,7 @@ function App() {
           item.children.push(file);
         }
         if (item[keyss]) {
-          return handleSubmitFolders(item[keyss], keyss)
+          return handleSubmitFolders(item[keyss], keyss);
         }
         return 0;
       }, null);
@@ -134,7 +134,7 @@ function App() {
     setOpenCreateFolderFrom(false);
     setOpenUploadFileFrom(false);
     return;
-  }
+  };
 
   /**
    * Delete Folder in the getFolderay Data
@@ -154,10 +154,10 @@ function App() {
             return key;
           }
           if (item.id === folderId) {
-            item.children.splice(index, 1)
+            item.children.splice(index, 1);
           }
           if (item[keys]) {
-            return handleOnClickDeleteFolders(item[keys], keys)
+            return handleOnClickDeleteFolders(item[keys], keys);
           }
           return 0;
         }, null);
@@ -182,8 +182,8 @@ function App() {
           citem.name = enteredName
           localStorage.setItem('Folder', JSON.stringify(getFolders));
         }
-      })
-    })
+      });
+    });
   };
 
 
@@ -222,8 +222,8 @@ function App() {
    * @param {items} items 
    */
   const handleClickNestedFolders = (items) => {
-    setFolderNested(items.children)
-    setFolderId(items.id)
+    setFolderNested(items.children);
+    setFolderId(items.id);
     setShow(true);
   };
 
@@ -232,7 +232,7 @@ function App() {
    * @param {Folder id} ids 
    */
   const openModel = (foldersid) => {
-    setSelectFolderId(foldersid)
+    setSelectFolderId(foldersid);
   };
 
   return (
