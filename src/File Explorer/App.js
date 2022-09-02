@@ -6,6 +6,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import RightSideBar from './Component/RightSideBar';
 import LeftSideBar from './Component/LeftSideBar';
 import TopNavbar from './Component/TopNavBar';
+// import useLocalStorage from 'use-local-storage';
 // import external css file
 import './Component/css/App.css';
 
@@ -141,7 +142,7 @@ function App() {
    * @param {index} id 
    */
   const handleOnClickDeleteFolders = (id, keys) => {
-    console.log(id);
+    // console.log(id);
     const index = getFolders.indexOf(id);
     const result = window.confirm('Are you sure you want to Delete this Folder!');
     if (result) {
@@ -161,7 +162,7 @@ function App() {
           }
           return 0;
         }, null);
-        setGetFolders([...getFolders])
+        setGetFolders([...getFolders]);
       }
     }
   };
@@ -236,7 +237,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div className='App'>
       <div className="card w-75 h-75  mt-5 mx-auto main-div border-1">
         <div className="card-body">
           {/* passing props TopNavBar Component */}

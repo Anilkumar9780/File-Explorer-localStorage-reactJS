@@ -21,7 +21,8 @@ const getTreeItemsFromData = treeItems => {
         nodeId={treeItemData.id}
         label={treeItemData.name} 
         children={children}
-        icon={<i className="fa fa-folder" />}
+        // icon={<i className="fa fa-folder" />}
+        icon={treeItemData.type === 'File' && <i className="fa fa-file" /> || treeItemData.type === 'Folder' && <i className="fa fa-folder" />}
       />
     );
   });

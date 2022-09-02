@@ -31,7 +31,7 @@ export default function RightSideBar({
   const [selected, setSelected] = React.useState();
   const [allFoldres, setAllFolders] = useState([]);
   const [searched, setSearched] = useState("");
-  const [visible, setVisible] = useState(3);
+  const [visible, setVisible] = useState(2);
 
   useEffect(() => {
     setAllFolders(data);
@@ -113,6 +113,12 @@ export default function RightSideBar({
     setSelected(event.target.value);
   };
 
+  /**
+   * Load More Button 
+   */
+  const showMoreItems = () => {
+    setVisible((prevValue) => prevValue + 1);
+  };
 
   /**
    *  set pagination perPage Three 
@@ -136,18 +142,20 @@ export default function RightSideBar({
   //   loopWithSlice(ref.current, ref.current + foldersPerPage)
   //   ref.current += foldersPerPage
   // }
-
-  /**
-   * Load More Button 
-   */
-  const showMoreItems = () => {
-    setVisible((prevValue) => prevValue + 3);
-  };
   return (
     <div>
       <div className="card sider-folder-show contniner">
         {/* sorting button by asc and Ascending and Descending select box*/}
-        <FormControl style={{ marginTop: '-68px', marginLeft: '700px', width: '90px', cursor: 'pointer' }} size='small' variant='standard'>
+        <FormControl
+          style={{
+            marginTop: '-68px',
+            marginLeft: '700px',
+            width: '90px',
+            cursor: 'pointer'
+          }}
+          size='small'
+          variant='standard'
+        >
           <InputLabel>Sort By</InputLabel>
           <Select value={selected} onChange={selectionChangeHandler}>
             <MenuItem onClick={sortByName} value={1}>Name</MenuItem>
@@ -168,16 +176,35 @@ export default function RightSideBar({
           <div className="card-body rows4" style={{ flexWrap: 'wrap' }}>
             {/* parent folders map  */}
             {allFoldres?.slice(0, visible).map((items) => {
-              return <div key={items.id} className="card col-md-5" align='left' style={{ width: '12rem', height: "200px", marginLeft: "40px", backgroundColor: '#666666' }}>
+              return <div key={items.id} className="card col-md-5" align='left'
+                style={{
+                  width: '12rem',
+                  height: "200px",
+                  marginLeft: "40px",
+                  backgroundColor: '#666666'
+                }}>
                 <div className="card-body">
                   <div className="text-center text-black">
-                    {items.type === 'Folder' && <i className="fa fa-folder pointer" style={{ fontSize: '110px' }} onClick={() => handleClickNestedFolders(items)} />}
-                    {items.type === 'File' && <i className="fa fa-file  pointer" style={{ fontSize: '110px' }} onClick={() => handleClickNestedFolders(items)} />}
+                    {items.type === 'Folder' &&
+                      <i
+                        className="fa fa-folder pointer"
+                        style={{ fontSize: '110px' }}
+                        onClick={() => handleClickNestedFolders(items)}
+                      />
+                    }
+                    {items.type === 'File' &&
+                      <i
+                        className="fa fa-file  pointer"
+                        style={{ fontSize: '110px' }}
+                        onClick={() => handleClickNestedFolders(items)}
+                      />
+                    }
                   </div>
                 </div>
                 <div className="card-footer bg-black border-black text-white cards">
                   <div style={{ fontSize: '10px' }}>
-                    <p className="name">{items.name}</p>
+                    {items.type === 'Folder' && <p className="name">{items.name}</p>}
+                    {items.type === 'File' && <p className="name">{items.type}</p>}
                     <p className="date">{items.date}</p>
                   </div>
                   <p>
@@ -262,11 +289,31 @@ export default function RightSideBar({
           <div className="card-body rows4">
             {/* map the children folders  */}
             {folderNested?.slice(0, visible).map((items) => {
-              return <div key={items.id} className="card col-md-2 " align='left' style={{ marginLeft: "40px", width: '11rem', height: "200px", backgroundColor: '#666666' }}>
+              return <div key={items.id} className="card col-md-2 "
+                align='left'
+                style={{
+                  marginLeft: "40px",
+                  width: '11rem',
+                  height: "200px",
+                  backgroundColor: '#666666'
+                }}
+              >
                 <div className="card-body ">
                   <div className="text-center text-black">
-                    {items.type === 'Folder' && <i className="fa fa-folder  pointer" style={{ fontSize: '110px' }} onClick={() => handleClickNestedFolders(items)} />}
-                    {items.type === 'File' && <i className="fa fa-file  pointer" style={{ fontSize: '110px' }} onClick={() => handleClickNestedFolders(items)} />}
+                    {items.type === 'Folder' &&
+                      <i
+                        className="fa fa-folder  pointer"
+                        style={{ fontSize: '110px' }}
+                        onClick={() => handleClickNestedFolders(items)}
+                      />
+                    }
+                    {items.type === 'File' &&
+                      <i
+                        className="fa fa-file  pointer"
+                        style={{ fontSize: '110px' }}
+                        onClick={() => handleClickNestedFolders(items)}
+                      />
+                    }
                   </div>
                 </div>
                 <div className="card-footer bg-black border-black text-white cards">
@@ -353,12 +400,14 @@ export default function RightSideBar({
         {/* load More button using pagination */}
         {allFoldres.length > 0 ? (
           <Button
-            className='mt-4'
+            className='mt-4 text-black'
             onClick={showMoreItems}
           >
-            More
+            Load More...
           </Button>
-        ) : (<div />)}
+        ) : (
+          <div />
+        )}
       </div>
     </div>
   );
