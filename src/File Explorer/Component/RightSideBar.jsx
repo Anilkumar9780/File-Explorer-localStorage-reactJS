@@ -33,6 +33,9 @@ export default function RightSideBar({
   const [searched, setSearched] = useState("");
   const [visible, setVisible] = useState(2);
 
+  /**
+   * set the all data one state (allFolders);
+   */
   useEffect(() => {
     setAllFolders(data);
   }, [data, folderNested, setFolderNested]);
@@ -73,7 +76,7 @@ export default function RightSideBar({
       const sortNested = ascendByName.sort((a, b) => a.name.localeCompare(b.name));
       setFolderNested(sortNested);
     }
-  }
+  };
 
   /**
    * sorting by Name Ascending Orders
