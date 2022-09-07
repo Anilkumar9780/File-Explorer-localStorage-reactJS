@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileUpload, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import Button from '@mui/material/Button';
@@ -18,15 +18,104 @@ export default function Navbar({
   //open create File Modle
   openUploadFileFrom,
   handleOpenFileUploadFrom,
-  //hnadle Submit
-  handleSubmitFolders,
-  handleSubmitFiles,
-  //onChnage Input 
-  handleOnChangeInputText,
-  handleOnChangeFileUpload,
+  setOpenCreateFolderFrom,
+  setOpenUploadFileFrom,
   //input value
-  inputFolderName,
+  getFolders,
+  folderId
 }) {
+  const [inputFolderName, setInputFolderName] = useState('');
+  const [inputFileUpload, setInputFileUpload] = useState('');
+
+  /**
+   * handle submit Folders add
+   */
+  const handleSubmitFolders = (getFolders,keyss) => {
+    //create objects
+    const folders = {
+      id: Math.floor(Math.random() * 1000),
+      name: inputFolderName,
+      date: new Date().toLocaleString(),
+      type: 'Folder',
+      children: [],
+    };
+    if (!folderId) {
+      getFolders.push(folders);
+      localStorage.setItem('Folder', JSON.stringify(getFolders));
+    } else {
+      getFolders.reduce((key, item) => {
+        if (key) {
+          return key;
+        }
+        if (item.id === folderId) {
+          item.children.push(folders);
+        }
+        if (item[keyss]) {
+          return handleSubmitFolders(item[keyss], keyss);
+        }
+        return 0;
+      }, null);
+      localStorage.setItem('Folder', JSON.stringify(getFolders));
+    }
+    setInputFolderName('');
+    setOpenCreateFolderFrom(false);
+    setOpenUploadFileFrom(false);
+    return;
+  }
+
+  /**
+   * handle submit Files add
+   */
+  const handleSubmitFiles = (getFolders,keyss) => {
+    // create objects
+    const file = {
+      id: Math.floor(Math.random() * 1000),
+      name: inputFileUpload,
+      date: new Date().toLocaleString(),
+      type: 'File',
+      children: [],
+    };
+    if (!folderId) {
+      getFolders.push(file);
+      localStorage.setItem('Folder', JSON.stringify(getFolders));
+    } else {
+      getFolders.reduce((key, item) => {
+        if (key) {
+          return key;
+        }
+        if (item.id === folderId) {
+          item.children.push(file);
+        }
+        if (item[keyss]) {
+          return handleSubmitFolders(item[keyss], keyss);
+        }
+        return 0;
+      }, null);
+      localStorage.setItem('Folder', JSON.stringify(getFolders));
+    }
+    setInputFolderName('');
+    setOpenCreateFolderFrom(false);
+    setOpenUploadFileFrom(false);
+    return;
+  };
+
+  /**
+  * Set the value in input type folder name onChange
+  * @param {event} event 
+  */
+  const handleOnChangeInputText = (event) => {
+    setInputFolderName(event.target.value)
+  };
+
+  /**
+   * set the value in input type file uploading onChange
+   * @param {event} event 
+   */
+  const handleOnChangeFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    setInputFileUpload(URL.createObjectURL(file));
+  };
 
   /**
    *  reload the page 
@@ -64,8 +153,8 @@ export default function Navbar({
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleSubmitFolders} >Add</Button>
-                <Button onClick={handleCancelFrom}>Cancel</Button>
+                <Button onClick={() => handleSubmitFolders(getFolders, 'children')} >Add</Button>
+                <Button onClick={handleCancelFrom} > Cancel</Button>
               </DialogActions>
             </Dialog>
             {/* folder name close*/}
@@ -102,7 +191,7 @@ export default function Navbar({
             {/* File Uploading  name close*/}
             <button
               onClick={onReload}
-              style={{ marginLeft:'10px',backgroundColor: ' #999999', border: '0px' }}
+              style={{ marginLeft: '10px', backgroundColor: ' #999999', border: '0px' }}
             >
               <i className='fa fa-refresh'></i>
             </button>

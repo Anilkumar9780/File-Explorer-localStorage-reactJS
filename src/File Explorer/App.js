@@ -6,7 +6,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import RightSideBar from './Component/RightSideBar';
 import LeftSideBar from './Component/LeftSideBar';
 import TopNavbar from './Component/TopNavBar';
-// import useLocalStorage from 'use-local-storage';
 // import external css file
 import './Component/css/App.css';
 
@@ -15,9 +14,9 @@ import './Component/css/App.css';
  * @returns getFolderay
  */
 const getFolder = () => {
-  const data = localStorage.getItem('Folder');
-  if (data) {
-    return JSON.parse(data);
+  const getFolders = localStorage.getItem('Folder');
+  if (getFolders) {
+    return JSON.parse(getFolders);
   }
   return [];
 };
@@ -27,10 +26,7 @@ function App() {
   const [openCreateFolderFrom, setOpenCreateFolderFrom] = useState(false);
   const [detailPage, setDetailPage] = useState(false);
   const [openUploadFileFrom, setOpenUploadFileFrom] = useState(false);
-  const [inputFolderName, setInputFolderName] = useState('');
-  const [inputFileUpload, setInputFileUpload] = useState('');
-  const [folderNested, setFolderNested] = useState('');
-  const [show, setShow] = useState(false);
+  const [allFoldres, setAllFolders] = useState([]);
   const [folderId, setFolderId] = useState();
   const [selectFolderId, setSelectFolderId] = useState();
 
@@ -42,103 +38,7 @@ function App() {
   }, [getFolders]);
 
   /**
-  * Set the value in input type folder name onChange
-  * @param {event} event 
-  */
-  const handleOnChangeInputText = (event) => {
-    setInputFolderName(event.target.value)
-  };
-
-  /**
-   * set the value in input type file uploading onChange
-   * @param {event} event 
-   */
-  const handleOnChangeFileUpload = (event) => {
-    const filePath = event.target;
-    const reader = new FileReader();
-    reader.readAsDataURL(filePath.files[0]);
-    reader.onload = () => {
-      setInputFileUpload(reader.result);
-    };
-    reader.onerror = () => {
-      console.log(reader.error);
-    };
-  };
-  
-  /**
-   * handle submit Folders add
-   */
-  const handleSubmitFolders = (keyss) => {
-    //create objects
-    const data = {
-      id: Math.floor(Math.random() * 1000),
-      name: inputFolderName,
-      date: new Date().toLocaleString(),
-      type: 'Folder',
-      children: [],
-    };
-    if (!folderId) {
-      getFolders.push(data);
-      localStorage.setItem('Folder', JSON.stringify(getFolders));
-    } else {
-      getFolders.reduce((key, item) => {
-        if (key) {
-          return key;
-        }
-        if (item.id === folderId) {
-          item.children.push(data);
-        }
-        if (item[keyss]) {
-          return handleSubmitFolders(item[keyss], keyss);
-        }
-        return 0;
-      }, null);
-      localStorage.setItem('Folder', JSON.stringify(getFolders));
-    }
-    setInputFolderName('');
-    setOpenCreateFolderFrom(false);
-    setOpenUploadFileFrom(false);
-    return;
-  }
-
-  /**
-   * handle submit Files add
-   */
-  const handleSubmitFiles = (keyss) => {
-    // create objects
-    const file = {
-      id: Math.floor(Math.random() * 1000),
-      file: inputFileUpload,
-      date: new Date().toLocaleString(),
-      type: 'File',
-      children: [],
-    };
-    if (!folderId) {
-      getFolders.push(file);
-      localStorage.setItem('Folder', JSON.stringify(getFolders));
-    } else {
-      getFolders.reduce((key, item) => {
-        if (key) {
-          return key;
-        }
-        if (item.id === folderId) {
-          item.children.push(file);
-        }
-        if (item[keyss]) {
-          return handleSubmitFolders(item[keyss], keyss);
-        }
-        return 0;
-      }, null);
-      localStorage.setItem('Folder', JSON.stringify(getFolders));
-    }
-    setInputFolderName('');
-    setOpenCreateFolderFrom(false);
-    setOpenUploadFileFrom(false);
-    return;
-  };
-
-  /**
-   * Delete Folder in the getFolderay Data
+   * Delete Folder in the getFolderay getFolders
    * @param {index} id 
    */
   const handleOnClickDeleteFolders = (id, keys) => {
@@ -222,10 +122,13 @@ function App() {
    * set Nested Folders and map Folders
    * @param {items} items 
    */
-  const handleClickNestedFolders = (items) => {
-    setFolderNested(items.children);
-    setFolderId(items.id);
-    setShow(true);
+  const handleClickNestedFolders = (allFolders) => {
+    setFolderId(allFolders.id);
+    if (allFolders.children) {
+      setAllFolders(allFolders.children)
+    } else {
+      return "Empty";
+    }
   };
 
   /**
@@ -236,6 +139,12 @@ function App() {
     setSelectFolderId(foldersid);
   };
 
+  /**
+   * set the All Folders
+   */
+  useEffect(()=>{
+    setAllFolders(getFolders);
+  },[getFolders])
   return (
     <div className='App'>
       <div className="card w-75 h-75  mt-5 mx-auto main-div border-1">
@@ -249,28 +158,23 @@ function App() {
             setOpenCreateFolderFrom={setOpenCreateFolderFrom}
             handleCancelFrom={handleCancelFrom}
             handleOpenFileUploadFrom={handleOpenFileUploadFrom}
-            handleSubmitFolders={handleSubmitFolders}
-            handleOnChangeInputText={handleOnChangeInputText}
-            handleOnChangeFileUpload={handleOnChangeFileUpload}
             openUploadFileFrom={openUploadFileFrom}
-            inputFolderName={inputFolderName}
-            inputFileUpload={inputFileUpload}
-            handleSubmitFiles={handleSubmitFiles}
+            setOpenUploadFileFrom={setOpenUploadFileFrom}
+            allFoldres={allFoldres}
+            folderId={folderId}
           />
           {/* passing prpos LeftSideBar Component */}
           <LeftSideBar
-            data={getFolders}
+            getFolders={getFolders}
+
           />
           {/* passing props RightSiderBar Component */}
           <RightSideBar
-            data={getFolders}
+            getFolders={getFolders}
             onDelete={handleOnClickDeleteFolders}
             onRename={handleOnClickRenameFolder}
             handleOpenCreateFolderFrom={handleOpenCreateFolderFrom}
             handleOpenFileUploadFrom={handleOpenFileUploadFrom}
-            folderNested={folderNested}
-            setFolderNested={setFolderNested}
-            show={show}
             handleClickNestedFolders={handleClickNestedFolders}
             openModel={openModel}
             handleCancelFrom={handleCancelFrom}
@@ -278,6 +182,8 @@ function App() {
             handleDetailS={handleDetailS}
             detailPage={detailPage}
             folderId={folderId}
+            allFoldres={allFoldres}
+            setAllFolders={setAllFolders}
           />
         </div>
       </div>
