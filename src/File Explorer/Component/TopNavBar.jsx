@@ -22,7 +22,7 @@ export default function Navbar({
   setOpenUploadFileFrom,
   //input value
   getFolders,
-  folderId
+  folderId,
 }) {
   const [inputFolderName, setInputFolderName] = useState('');
   const [inputFileUpload, setInputFileUpload] = useState('');
@@ -184,7 +184,7 @@ export default function Navbar({
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleSubmitFiles}>Add</Button>
+                <Button onClick={()=>handleSubmitFiles(getFolders, 'children')}>Add</Button>
                 <Button onClick={handleCancelFrom}>Cancel</Button>
               </DialogActions>
             </Dialog>

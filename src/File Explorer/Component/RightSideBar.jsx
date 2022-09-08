@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Dialog } from '@material-ui/core';
 import SearchBar from "material-ui-search-bar";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
-import { Select, FormHelperText, FormControl, InputLabel, } from '@mui/material';
+import { Select, FormHelperText, FormControl, InputLabel, TextField } from '@mui/material';
 // import MenuItem from '@mui/material/MenuItem';
 
 export default function RightSideBar({
@@ -23,27 +23,43 @@ export default function RightSideBar({
   handleDetailS,
   detailPage,
   allFoldres,
-  setAllFolders
+  setAllFolders,
+  getFolders,
+  deleteConfirmation,
+  handledeleteConfirmationModle,
+  setDeleteConfirmation,
+  setGetFolders,
+  selectFolderId,
+  //
+  editFolderFrom,
+  setEditFolderFrom,
+  handleEditModleFrom,
+  editName,
+  setEditName,
+  editsName
 }) {
   const [selected, setSelected] = React.useState();
-  const [visible, setVisible] = useState(2);
+  const [visible, setVisible] = useState(3);
   const [searched, setSearched] = useState("");
-  
+
   /**
    * search Folders (name)
    * @param {event} event
    */
-   const handleOnSearchFolderName = (searchedVal) => {
+  const handleOnSearchFolderName = (searchedVal) => {
     const filteredFolders = allFoldres.filter((folders) => {
       return folders.name.toLowerCase().includes(searchedVal.toLowerCase());
     });
     setAllFolders(filteredFolders);
-};
+  };
 
-const cancelSearch = () => {
-  setSearched("");
-  handleOnSearchFolderName(searched);
-};
+  /**
+   * search value cancel
+   */
+  const cancelSearch = () => {
+    setSearched("");
+    handleOnSearchFolderName(searched);
+  };
 
   /**
    * 
@@ -61,55 +77,76 @@ const cancelSearch = () => {
   };
 
   /**
-   *  set pagination perPage Three 
-  */
-  // const foldersPerPage = 3;
-  // const ref = useRef(foldersPerPage)
-  // const loopWithSlice = (start, end) => {
-  //   if (!folderId) {
-  //     const slicedfolders = data.slice(start, end);
-  //     setAllFolders(slicedfolders);
-  //   } else {
-  //     // const slicedNestedfolders = folderNested.slice(start, end);
-  //     // setFolderNested(slicedNestedfolders);
-  //   }
-  // };
-  // useEffect(() => {
-  //   loopWithSlice(0, foldersPerPage)
-  // }, [])
-
-  // const handleShowMorePosts = () => {
-  //   loopWithSlice(ref.current, ref.current + foldersPerPage)
-  //   ref.current += foldersPerPage
-  // }
-
-  
-  /**
    *  Sorting by Name Alphabetical orders
    */
-   const sortByName = () => {
+  const sortByName = () => {
     const ascendingByName = [...allFoldres];
     const sorts = ascendingByName.sort((a, b) => a.name.localeCompare(b.name));
     setAllFolders(sorts);
-};
+  };
 
-/**
- * sorting by Name Ascending Orders
- */
-const sortAscending = () => {
+  /**
+   * sorting by Name Ascending Orders
+   */
+  const sortAscending = () => {
     const ascendingByName = [...allFoldres];
     const sorting = ascendingByName.sort((a, b) => a.name > b.name ? 1 : -1);
     setAllFolders(sorting);
-};
+  };
 
-/**
-* Sorting by Name Descending Oders
-*/
-const sortDescending = () => {
+  /**
+  * Sorting by Name Descending Oders
+  */
+  const sortDescending = () => {
     const sortbyDescending = [...allFoldres];
     const sort = sortbyDescending.sort((a, b) => a.name > b.name ? -1 : 1);
     setAllFolders(sort);
-};
+  };
+
+  /**
+   * Rename Folder Name  value set the input box  
+   * @param {id} id 
+   */
+  const handleOnClickRenameFolder = (getFolders, nestedFolders) => {
+    setEditName(enteredName);
+    const enteredName = editName;
+    getFolders.reduce((key, item) => {
+      if (key) {
+        return key;
+      }
+      if (item.id === selectFolderId) {
+        item.name = enteredName;
+      }
+      if (item[nestedFolders]) {
+        return handleOnClickDeleteFolders(item[nestedFolders], nestedFolders);
+      }
+      return 0;
+    }, null);
+    setGetFolders(getFolders);
+    setEditFolderFrom(false);
+  };
+
+  /**
+   *  Delete Nested Data 
+   * @param {all Data} data 
+   * @param {Nested Data} NestedFolders 
+   */
+  const handleOnClickDeleteFolders = (getFolders, NestedFolders) => {
+    getFolders.reduce((key, item, index) => {
+      if (key) {
+        return key;
+      }
+      if (item.id === selectFolderId) {
+        getFolders.splice(index, 1);
+      }
+      if (item[NestedFolders]) {
+        return handleOnClickDeleteFolders(item[NestedFolders], NestedFolders);
+      }
+      return 0;
+    }, null);
+    setGetFolders([...getFolders]);
+    setDeleteConfirmation(false);
+  };
 
   return (
     <div>
@@ -133,6 +170,7 @@ const sortDescending = () => {
           </Select>
           <FormHelperText>Sort By Name</FormHelperText>
         </FormControl>
+        {/*  end the tag the seletction box */}
         {/* search bar  */}
         <SearchBar
           style={{ height: '40px', padding: '-300px', backgroundColor: "#999999" }}
@@ -141,9 +179,10 @@ const sortDescending = () => {
           onChange={(searchVal) => handleOnSearchFolderName(searchVal)}
           onCancelSearch={() => cancelSearch()}
         />
+        {/*  end the tag search bar */}
         <div className="card-body rows4" style={{ flexWrap: 'wrap' }}>
           {/*  folders map  */}
-          {allFoldres?.slice(0, visible).map((items) => {
+          {allFoldres.slice(0, visible).map((items) => {
             return <div key={items.id} className="card col-md-5" align='left'
               style={{
                 width: '12rem',
@@ -164,7 +203,6 @@ const sortDescending = () => {
                     <i
                       className="fa fa-file  pointer"
                       style={{ fontSize: '110px' }}
-                      onClick={() => handleClickNestedFolders(items)}
                     />
                   }
                 </div>
@@ -172,13 +210,14 @@ const sortDescending = () => {
               <div className="card-footer bg-black border-black text-white cards">
                 <div style={{ fontSize: '10px' }}>
                   {items.type === 'Folder' && <p className="name">{items.name}</p>}
-                  {items.type === 'File' && <p className="name">{items.name}</p>}
+                  {items.type === 'File' && <p className="name">{items.type}</p>}
                   <p className="date">{items.date}</p>
                 </div>
                 <p>
+                  {/* onClick threedots open menu */}
                   <div className="menu-nav">
                     <div className="menu-item" />
-                    <div className="dropdown-container" tabIndex="-1" onClick={() => openModel(items.id)}>
+                    <div className="dropdown-container" tabIndex="-1" onClick={() => openModel(items, items.id)}>
                       <div className="three-dots" />
                       <div className="dropdown">
                         <div>
@@ -191,14 +230,14 @@ const sortDescending = () => {
                         <div>
                           <div
                             className="nav-link fa fa-pencil-square mt-1 btns"
-                            onClick={() => onRename(items.name)}
+                            onClick={handleEditModleFrom}
                           > {' '} Rename
                           </div>
                         </div>
                         <div>
                           <div
                             className="nav-link fa fa-trash mt-1 btns"
-                            onClick={() => onDelete(items)}
+                            onClick={handledeleteConfirmationModle}
                           > {' '} Delete
                           </div>
                         </div>
@@ -212,6 +251,41 @@ const sortDescending = () => {
                       </div>
                     </div>
                   </div>
+                  {/* end the tag onClick threedots open menu */}
+                  {/* Tag Start Rename From Modle */}
+                  <Dialog open={editFolderFrom} onClose={handleCancelFrom}>
+                    <DialogTitle>Create Folder</DialogTitle>
+                    <DialogContent>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        placeholder="Rename your Folder name.."
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={editName}
+                        onChange={editsName}
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={() => handleOnClickRenameFolder(getFolders, 'children')} >Add</Button>
+                      <Button onClick={handleCancelFrom} > Cancel</Button>
+                    </DialogActions>
+                  </Dialog>
+                  {/* end tag Rename From Modle */}
+                  {/*  onCLick Delete  Button then open Modle Delete Confirmation */}
+                  <Dialog open={deleteConfirmation} onClose={handleCancelFrom}>
+                    <DialogTitle>Are you sure?</DialogTitle>
+                    <DialogContent>
+                      This will premanenlty Delete Folder!
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={() => handleOnClickDeleteFolders(getFolders, 'children')} >Delete</Button>
+                      <Button onClick={handleCancelFrom} >Cancel</Button>
+                    </DialogActions>
+                  </Dialog>
+                  {/*  end the tag Delete Confirmation */}
                   {/* onclick detail button then model open menu  */}
                   <Dialog open={detailPage} onClose={handleCancelFrom}>
                     <DialogTitle>Details</DialogTitle>
@@ -220,13 +294,14 @@ const sortDescending = () => {
                       {items.type === 'File' && <DialogTitle>Name :- {items.name}</DialogTitle>}
                       <DialogTitle>Types :- {items.type}</DialogTitle>
                       <DialogTitle>Date :- {items.date}</DialogTitle>
-                      {items.type === 'Folder' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>}
-                      {items.type === 'File' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>}
+                      {/* {items.type === 'Folder' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>} */}
+                      {/* {items.type === 'File' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>} */}
                     </DialogContent>
                     <DialogActions>
                       <Button onClick={handleCancelFrom}>Ok</Button>
                     </DialogActions>
                   </Dialog>
+                  {/*  end the tag Delail Page Modle */}
                 </p>
               </div>
             </div>
@@ -252,6 +327,7 @@ const sortDescending = () => {
               </MenuItem>
               <MenuItem divider />
             </ContextMenu>
+            {/*  end the tag reght click open menu */}
           </div>
         </div>
         {/* load More button using pagination */}
@@ -265,7 +341,29 @@ const sortDescending = () => {
         ) : (
           <div />
         )}
+        {/* end the tag load More button */}
       </div>
     </div>
   );
 }
+
+  // const foldersPerPage = 3;
+  // const ref = useRef(foldersPerPage)
+  // const loopWithSlice = (start, end) => {
+  //   if (!folderId) {
+  //     const slicedfolders = data.slice(start, end);
+  //     setAllFolders(slicedfolders);
+  //   } else {
+  //     // const slicedNestedfolders = folderNested.slice(start, end);
+  //     // setFolderNested(slicedNestedfolders);
+  //   }
+  // };
+  // useEffect(() => {
+  //   loopWithSlice(0, foldersPerPage)
+  // }, [])
+
+  // const handleShowMorePosts = () => {
+  //   loopWithSlice(ref.current, ref.current + foldersPerPage)
+  //   ref.current += foldersPerPage
+  // }
+

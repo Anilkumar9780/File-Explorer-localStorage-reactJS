@@ -29,64 +29,19 @@ function App() {
   const [allFoldres, setAllFolders] = useState([]);
   const [folderId, setFolderId] = useState();
   const [selectFolderId, setSelectFolderId] = useState();
+  const [deleteConfirmation, setDeleteConfirmation] = useState(false);
+  const [editFolderFrom, setEditFolderFrom] = useState(false);
+  const [editName, setEditName] = useState();
+  //  console.log(selectFolderId);
+
 
   /**
    * set getFolders in LocalStorage
    */
   useEffect(() => {
     localStorage.setItem('Folder', JSON.stringify(getFolders));
+    setAllFolders(getFolders);
   }, [getFolders]);
-
-  /**
-   * Delete Folder in the getFolderay getFolders
-   * @param {index} id 
-   */
-  const handleOnClickDeleteFolders = (id, keys) => {
-    // console.log(id);
-    const index = getFolders.indexOf(id);
-    const result = window.confirm('Are you sure you want to Delete this Folder!');
-    if (result) {
-      if (!folderId) {
-        getFolders.splice(index, 1);
-        setGetFolders([...getFolders]);
-      } else {
-        getFolders.reduce((key, item) => {
-          if (key) {
-            return key;
-          }
-          if (item.id === folderId) {
-            item.children.splice(index, 1);
-          }
-          if (item[keys]) {
-            return handleOnClickDeleteFolders(item[keys], keys);
-          }
-          return 0;
-        }, null);
-        setGetFolders([...getFolders]);
-      }
-    }
-  };
-
-  /**
-   * Rename Folder Name  value set the input box  
-   * @param {id} id 
-   */
-  const handleOnClickRenameFolder = (name) => {
-    const enteredName = prompt('Please enter your name', name);
-    getFolders.forEach((item) => {
-      if (item.id === selectFolderId) {
-        item.name = enteredName;
-        localStorage.setItem('Folder', JSON.stringify(getFolders));
-      }
-      item.children.forEach((citem) => {
-        if (citem.id === selectFolderId) {
-          citem.name = enteredName
-          localStorage.setItem('Folder', JSON.stringify(getFolders));
-        }
-      });
-    });
-  };
-
 
   /**
    * set open modal onclick upload file button 
@@ -116,6 +71,8 @@ function App() {
     setOpenCreateFolderFrom(false);
     setOpenUploadFileFrom(false);
     setDetailPage(false);
+    setDeleteConfirmation(false);
+    setEditFolderFrom(false);
   };
 
   /**
@@ -135,55 +92,87 @@ function App() {
    * 
    * @param {Folder id} ids 
    */
-  const openModel = (foldersid) => {
+  const openModel = (items, foldersid) => {
     setSelectFolderId(foldersid);
+    setEditName(items.name);
   };
 
   /**
-   * set the All Folders
+   * open delete Confirmation Modle
    */
-  useEffect(()=>{
-    setAllFolders(getFolders);
-  },[getFolders])
+  const handledeleteConfirmationModle = () => {
+    setDeleteConfirmation(true);
+  };
+
+  const handleEditModleFrom = () => {
+    setEditFolderFrom(true);
+  };
+  const editsName = (event) => {
+    setEditName(event.traget.value);
+  };
+
   return (
     <div className='App'>
       <div className="card w-75 h-75  mt-5 mx-auto main-div border-1">
         <div className="card-body">
           {/* passing props TopNavBar Component */}
           <TopNavbar
+            // get all Data
             getFolders={getFolders}
             setGetFolders={setGetFolders}
+            // open modle from folder input box
             handleOpenCreateFolderFrom={handleOpenCreateFolderFrom}
             openCreateFolderFrom={openCreateFolderFrom}
             setOpenCreateFolderFrom={setOpenCreateFolderFrom}
+            // From cancel button
             handleCancelFrom={handleCancelFrom}
+            // open modle upload file input box
             handleOpenFileUploadFrom={handleOpenFileUploadFrom}
             openUploadFileFrom={openUploadFileFrom}
             setOpenUploadFileFrom={setOpenUploadFileFrom}
             allFoldres={allFoldres}
+            // folders id 
             folderId={folderId}
           />
           {/* passing prpos LeftSideBar Component */}
           <LeftSideBar
             getFolders={getFolders}
-
           />
           {/* passing props RightSiderBar Component */}
           <RightSideBar
+            // all get Data
             getFolders={getFolders}
-            onDelete={handleOnClickDeleteFolders}
-            onRename={handleOnClickRenameFolder}
+            setGetFolders={setGetFolders}
+            // move nested Folders
+            handleClickNestedFolders={handleClickNestedFolders}
+            // open modle 
+            openCreateFolderFrom={openCreateFolderFrom}
             handleOpenCreateFolderFrom={handleOpenCreateFolderFrom}
             handleOpenFileUploadFrom={handleOpenFileUploadFrom}
-            handleClickNestedFolders={handleClickNestedFolders}
             openModel={openModel}
+            // From cancel button
             handleCancelFrom={handleCancelFrom}
-            openCreateFolderFrom={openCreateFolderFrom}
-            handleDetailS={handleDetailS}
+            //Detail Modle
             detailPage={detailPage}
+            handleDetailS={handleDetailS}
+            // folders id 
             folderId={folderId}
+            // all Data
             allFoldres={allFoldres}
             setAllFolders={setAllFolders}
+            // Delete Confimation 
+            deleteConfirmation={deleteConfirmation}
+            handledeleteConfirmationModle={handledeleteConfirmationModle}
+            setDeleteConfirmation={setDeleteConfirmation}
+            // selete Folders id
+            selectFolderId={selectFolderId}
+            //
+            editFolderFrom={editFolderFrom}
+            setEditFolderFrom={setEditFolderFrom}
+            handleEditModleFrom={handleEditModleFrom}
+            editName={editName}
+            setEditName={setEditName}
+            editsName={editsName}
           />
         </div>
       </div>

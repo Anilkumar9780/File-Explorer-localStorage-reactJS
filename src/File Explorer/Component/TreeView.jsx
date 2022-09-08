@@ -19,14 +19,14 @@ const getTreeItemsFromData = treeItems => {
       <TreeItem
         key={treeItemData.id}
         nodeId={treeItemData.id}
-        label={treeItemData.name} 
+        label={treeItemData.type === 'Folder' && treeItemData.name || treeItemData.type === 'File' && treeItemData.type} 
         children={children}
-        // icon={<i className="fa fa-folder" />}
         icon={treeItemData.type === 'File' && <i className="fa fa-file" /> || treeItemData.type === 'Folder' && <i className="fa fa-folder" />}
       />
     );
   });
 };
+
 /**
  * display tree view using recursion
  * @param {treeItems} param0 
