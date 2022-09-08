@@ -27,13 +27,16 @@ export default function Navbar({
   const [inputFolderName, setInputFolderName] = useState('');
   const [inputFileUpload, setInputFileUpload] = useState('');
 
-  /**
-   * handle submit Folders add
-   */
-  const handleSubmitFolders = (getFolders,keyss) => {
+ /**
+  * handle submit Folders add
+  * @param {allData} getFolders 
+  * @param {nestedkey} nestedkey
+  * @returns add new folder
+  */
+  const handleSubmitFolders = (getFolders,nestedkey) => {
     //create objects
     const folders = {
-      id: Math.floor(Math.random() * 1000),
+      id: Math.floor(Math.random() * 100),
       name: inputFolderName,
       date: new Date().toLocaleString(),
       type: 'Folder',
@@ -50,8 +53,8 @@ export default function Navbar({
         if (item.id === folderId) {
           item.children.push(folders);
         }
-        if (item[keyss]) {
-          return handleSubmitFolders(item[keyss], keyss);
+        if (item[nestedkey]) {
+          return handleSubmitFolders(item[nestedkey], nestedkey);
         }
         return 0;
       }, null);
@@ -61,12 +64,15 @@ export default function Navbar({
     setOpenCreateFolderFrom(false);
     setOpenUploadFileFrom(false);
     return;
-  }
+  };
 
   /**
-   * handle submit Files add
+   *  handle submit Files add
+   * @param {alldata} getFolders 
+   * @param {nesterkey} nestedkey 
+   * @returns new add file
    */
-  const handleSubmitFiles = (getFolders,keyss) => {
+  const handleSubmitFiles = (getFolders,nestedkey) => {
     // create objects
     const file = {
       id: Math.floor(Math.random() * 1000),
@@ -86,8 +92,8 @@ export default function Navbar({
         if (item.id === folderId) {
           item.children.push(file);
         }
-        if (item[keyss]) {
-          return handleSubmitFolders(item[keyss], keyss);
+        if (item[nestedkey]) {
+          return handleSubmitFolders(item[nestedkey], nestedkey);
         }
         return 0;
       }, null);
@@ -131,7 +137,7 @@ export default function Navbar({
         <div className="container-fluid niner-navers-top">
           <span className="navbar-brand">
             {' '}
-            {/* open model button new Folder */}
+            {/* start tag open model button new Folder */}
             <Button variant="outlined" className="text-black" onClick={handleOpenCreateFolderFrom}>
               <FontAwesomeIcon icon={faFolderPlus} />
               New Folder
@@ -157,9 +163,9 @@ export default function Navbar({
                 <Button onClick={handleCancelFrom} > Cancel</Button>
               </DialogActions>
             </Dialog>
-            {/* folder name close*/}
+          {/*  end tag open model button new Folder  */}
             {' '}
-            {/* open model button  File Uploading*/}
+            {/*  start tag open model button  File Uploading*/}
             <Button variant="outlined" className="text-black" onClick={handleOpenFileUploadFrom}>
               <FontAwesomeIcon icon={faFileUpload} />
               {' '}
@@ -188,7 +194,8 @@ export default function Navbar({
                 <Button onClick={handleCancelFrom}>Cancel</Button>
               </DialogActions>
             </Dialog>
-            {/* File Uploading  name close*/}
+            {/* end tag File Uploading  name close*/}
+            {/* ReLoad Button */}
             <button
               onClick={onReload}
               style={{ marginLeft: '10px', backgroundColor: ' #999999', border: '0px' }}

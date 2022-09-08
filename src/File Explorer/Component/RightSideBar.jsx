@@ -14,16 +14,21 @@ export default function RightSideBar({
   // get the props 
   handleOpenCreateFolderFrom,
   handleOpenFileUploadFrom,
+  // move nested folder
   handleClickNestedFolders,
+  // cancel button open modle close
   handleCancelFrom,
+  // detail page open modle
   handleDetailS,
   detailPage,
-  allFoldres,
-  setAllFolders,
-  getFolders,
+  //Delete  Confirmation open modle 
   deleteConfirmation,
   handledeleteConfirmationModle,
   setDeleteConfirmation,
+  // all Data 
+  allFoldres,
+  setAllFolders,
+  getFolders,
   setGetFolders,
   //Rename modle open onclick
   editFolderFrom,
@@ -107,9 +112,9 @@ export default function RightSideBar({
   };
 
   /**
-   *  Delete Nested Data 
-   * @param {all Data} data 
-   * @param {Nested Data} NestedFolders 
+   * delete nested Folders 
+   * @param {getFolders} getFolders 
+   * @param {NestedFolders} NestedFolders 
    */
   const handleOnClickDeleteFolders = (getFolders, NestedFolders) => {
     getFolders.reduce((key, item, index) => {
@@ -130,11 +135,12 @@ export default function RightSideBar({
 
 
   /**
-   * Rename Folder Name  value set the input box  
-   * @param {id} id 
+   * Rename Folder Name  value set the input box
+   * @param {getFolders} getFolders 
+   * @param {nestedFolders} nestedFolders 
    */
   const handleOnClickRenameFolder = (getFolders, nestedFolders) => {
-    setEditName(editName);
+    // setEditName(editName);
     const enteredName = editName;
     getFolders.reduce((key, item) => {
       if (key) {
@@ -148,7 +154,6 @@ export default function RightSideBar({
       }
       return 0;
     }, null);
-    // setGetFolders(getFolders);
     localStorage.setItem('Folder', JSON.stringify(getFolders));
     setEditFolderFrom(false);
   };
@@ -158,7 +163,7 @@ export default function RightSideBar({
   * @param {event} event 
   */
   const OnChangeEditName = (event) => {
-    setEditName(event.traget.value);
+    setEditName(event.target.value);
   };
 
   return (
@@ -243,7 +248,6 @@ export default function RightSideBar({
                         <div>
                           <div
                             className="nav-link fa fa-pencil-square mt-1 btns"
-                            // onClick={() => handleOnClickRenameFolder(getFolders, 'children')}
                             onClick={handleEditModleFrom}
                           > {' '} Rename
                           </div>
@@ -274,8 +278,8 @@ export default function RightSideBar({
                         autoFocus
                         margin="dense"
                         id="name"
-                        value={editName}
                         onChange={OnChangeEditName}
+                        value={editName}
                         placeholder="Rename your Folder name.."
                         type="text"
                         fullWidth
