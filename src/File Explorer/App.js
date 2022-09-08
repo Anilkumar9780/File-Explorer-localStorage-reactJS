@@ -28,12 +28,8 @@ function App() {
   const [openUploadFileFrom, setOpenUploadFileFrom] = useState(false);
   const [allFoldres, setAllFolders] = useState([]);
   const [folderId, setFolderId] = useState();
-  const [selectFolderId, setSelectFolderId] = useState();
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [editFolderFrom, setEditFolderFrom] = useState(false);
-  const [editName, setEditName] = useState();
-  //  console.log(selectFolderId);
-
 
   /**
    * set getFolders in LocalStorage
@@ -89,26 +85,17 @@ function App() {
   };
 
   /**
-   * 
-   * @param {Folder id} ids 
-   */
-  const openModel = (items, foldersid) => {
-    setSelectFolderId(foldersid);
-    setEditName(items.name);
-  };
-
-  /**
    * open delete Confirmation Modle
    */
   const handledeleteConfirmationModle = () => {
     setDeleteConfirmation(true);
   };
 
+  /**
+   *  onClick open Modle (Rename From) 
+   */
   const handleEditModleFrom = () => {
     setEditFolderFrom(true);
-  };
-  const editsName = (event) => {
-    setEditName(event.traget.value);
   };
 
   return (
@@ -149,7 +136,7 @@ function App() {
             openCreateFolderFrom={openCreateFolderFrom}
             handleOpenCreateFolderFrom={handleOpenCreateFolderFrom}
             handleOpenFileUploadFrom={handleOpenFileUploadFrom}
-            openModel={openModel}
+            // openModel={openModel}
             // From cancel button
             handleCancelFrom={handleCancelFrom}
             //Detail Modle
@@ -165,14 +152,14 @@ function App() {
             handledeleteConfirmationModle={handledeleteConfirmationModle}
             setDeleteConfirmation={setDeleteConfirmation}
             // selete Folders id
-            selectFolderId={selectFolderId}
+            // selectFolderId={selectFolderId}
             //
             editFolderFrom={editFolderFrom}
             setEditFolderFrom={setEditFolderFrom}
             handleEditModleFrom={handleEditModleFrom}
-            editName={editName}
-            setEditName={setEditName}
-            editsName={editsName}
+            // editName={editName}
+            // setEditName={setEditName}
+            // editsName={editsName}
           />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileUpload, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import Button from '@mui/material/Button';
@@ -9,16 +9,12 @@ import { Dialog } from '@material-ui/core';
 import SearchBar from "material-ui-search-bar";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { Select, FormHelperText, FormControl, InputLabel, TextField } from '@mui/material';
-// import MenuItem from '@mui/material/MenuItem';
 
 export default function RightSideBar({
   // get the props 
-  onDelete,
   handleOpenCreateFolderFrom,
   handleOpenFileUploadFrom,
   handleClickNestedFolders,
-  onRename,
-  openModel,
   handleCancelFrom,
   handleDetailS,
   detailPage,
@@ -29,18 +25,25 @@ export default function RightSideBar({
   handledeleteConfirmationModle,
   setDeleteConfirmation,
   setGetFolders,
-  selectFolderId,
-  //
+  //Rename modle open onclick
   editFolderFrom,
   setEditFolderFrom,
   handleEditModleFrom,
-  editName,
-  setEditName,
-  editsName
 }) {
   const [selected, setSelected] = React.useState();
   const [visible, setVisible] = useState(3);
-  const [searched, setSearched] = useState("");
+  const [searched, setSearched] = useState('');
+  const [selectFolderId, setSelectFolderId] = useState();
+  const [editName, setEditName] = useState('');
+
+  /**
+   * 
+   * @param {Folder id} ids 
+   */
+  const openModel = (items, foldersid) => {
+    setSelectFolderId(foldersid);
+    setEditName(items.name);
+  };
 
   /**
    * search Folders (name)
@@ -104,29 +107,6 @@ export default function RightSideBar({
   };
 
   /**
-   * Rename Folder Name  value set the input box  
-   * @param {id} id 
-   */
-  const handleOnClickRenameFolder = (getFolders, nestedFolders) => {
-    setEditName(enteredName);
-    const enteredName = editName;
-    getFolders.reduce((key, item) => {
-      if (key) {
-        return key;
-      }
-      if (item.id === selectFolderId) {
-        item.name = enteredName;
-      }
-      if (item[nestedFolders]) {
-        return handleOnClickDeleteFolders(item[nestedFolders], nestedFolders);
-      }
-      return 0;
-    }, null);
-    setGetFolders(getFolders);
-    setEditFolderFrom(false);
-  };
-
-  /**
    *  Delete Nested Data 
    * @param {all Data} data 
    * @param {Nested Data} NestedFolders 
@@ -144,8 +124,41 @@ export default function RightSideBar({
       }
       return 0;
     }, null);
-    setGetFolders([...getFolders]);
+    localStorage.setItem('Folder', JSON.stringify(getFolders));
     setDeleteConfirmation(false);
+  };
+
+
+  /**
+   * Rename Folder Name  value set the input box  
+   * @param {id} id 
+   */
+  const handleOnClickRenameFolder = (getFolders, nestedFolders) => {
+    setEditName(editName);
+    const enteredName = editName;
+    getFolders.reduce((key, item) => {
+      if (key) {
+        return key;
+      }
+      if (item.id === selectFolderId) {
+        item.name = enteredName;
+      }
+      if (item[nestedFolders]) {
+        return handleOnClickRenameFolder(item[nestedFolders], nestedFolders);
+      }
+      return 0;
+    }, null);
+    // setGetFolders(getFolders);
+    localStorage.setItem('Folder', JSON.stringify(getFolders));
+    setEditFolderFrom(false);
+  };
+
+  /**
+  *  rename the input box 
+  * @param {event} event 
+  */
+  const OnChangeEditName = (event) => {
+    setEditName(event.traget.value);
   };
 
   return (
@@ -230,6 +243,7 @@ export default function RightSideBar({
                         <div>
                           <div
                             className="nav-link fa fa-pencil-square mt-1 btns"
+                            // onClick={() => handleOnClickRenameFolder(getFolders, 'children')}
                             onClick={handleEditModleFrom}
                           > {' '} Rename
                           </div>
@@ -254,22 +268,22 @@ export default function RightSideBar({
                   {/* end the tag onClick threedots open menu */}
                   {/* Tag Start Rename From Modle */}
                   <Dialog open={editFolderFrom} onClose={handleCancelFrom}>
-                    <DialogTitle>Create Folder</DialogTitle>
+                    <DialogTitle>Rename Folder</DialogTitle>
                     <DialogContent>
                       <TextField
                         autoFocus
                         margin="dense"
                         id="name"
+                        value={editName}
+                        onChange={OnChangeEditName}
                         placeholder="Rename your Folder name.."
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={editName}
-                        onChange={editsName}
                       />
                     </DialogContent>
                     <DialogActions>
-                      <Button onClick={() => handleOnClickRenameFolder(getFolders, 'children')} >Add</Button>
+                      <Button onClick={() => handleOnClickRenameFolder(getFolders, 'children')} >Rename</Button>
                       <Button onClick={handleCancelFrom} > Cancel</Button>
                     </DialogActions>
                   </Dialog>
@@ -294,8 +308,8 @@ export default function RightSideBar({
                       {items.type === 'File' && <DialogTitle>Name :- {items.name}</DialogTitle>}
                       <DialogTitle>Types :- {items.type}</DialogTitle>
                       <DialogTitle>Date :- {items.date}</DialogTitle>
-                      {/* {items.type === 'Folder' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>} */}
-                      {/* {items.type === 'File' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>} */}
+                      {items.type === 'Folder' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>}
+                      {items.type === 'File' && <DialogTitle>Size :- {items.name.length}MB</DialogTitle>}
                     </DialogContent>
                     <DialogActions>
                       <Button onClick={handleCancelFrom}>Ok</Button>
