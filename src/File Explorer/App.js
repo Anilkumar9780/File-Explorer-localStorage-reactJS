@@ -24,13 +24,15 @@ const getFolder = () => {
 function App() {
   const [getFolders, setGetFolders] = useState(getFolder());
   const [openCreateFolderFrom, setOpenCreateFolderFrom] = useState(false);
-  const [detailPage, setDetailPage] = useState(false);
   const [openUploadFileFrom, setOpenUploadFileFrom] = useState(false);
-  const [allFoldres, setAllFolders] = useState([]);
-  const [folderId, setFolderId] = useState();
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [editFolderFrom, setEditFolderFrom] = useState(false);
-
+  const [detailPage, setDetailPage] = useState(false);
+  const [allFoldres, setAllFolders] = useState([]);
+  const [folderId, setFolderId] = useState();
+  const [treeId, setTreeId] = useState();
+  console.log(treeId);
+  
   /**
    * set getFolders in LocalStorage
    */
@@ -124,9 +126,13 @@ function App() {
           {/* passing prpos LeftSideBar Component */}
           <LeftSideBar
             getFolders={getFolders}
+            treeId={treeId}
+            setTreeId={setTreeId}
+
           />
           {/* passing props RightSiderBar Component */}
           <RightSideBar
+            treeId={treeId}
             // all get Data
             getFolders={getFolders}
             setGetFolders={setGetFolders}
@@ -157,9 +163,9 @@ function App() {
             editFolderFrom={editFolderFrom}
             setEditFolderFrom={setEditFolderFrom}
             handleEditModleFrom={handleEditModleFrom}
-            // editName={editName}
-            // setEditName={setEditName}
-            // editsName={editsName}
+          // editName={editName}
+          // setEditName={setEditName}
+          // editsName={editsName}
           />
         </div>
       </div>

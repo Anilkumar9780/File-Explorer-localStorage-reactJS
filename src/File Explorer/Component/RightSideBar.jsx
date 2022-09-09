@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileUpload, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
@@ -34,12 +35,13 @@ export default function RightSideBar({
   editFolderFrom,
   setEditFolderFrom,
   handleEditModleFrom,
+  treeId
 }) {
-  const [selected, setSelected] = React.useState();
-  const [visible, setVisible] = useState(3);
-  const [searched, setSearched] = useState('');
   const [selectFolderId, setSelectFolderId] = useState();
+  const [searched, setSearched] = useState('');
   const [editName, setEditName] = useState('');
+  const [selected, setSelected] = useState();
+  const [visible, setVisible] = useState(3);
 
   /**
    * 
@@ -133,7 +135,6 @@ export default function RightSideBar({
     setDeleteConfirmation(false);
   };
 
-
   /**
    * Rename Folder Name  value set the input box
    * @param {getFolders} getFolders 
@@ -159,12 +160,33 @@ export default function RightSideBar({
   };
 
   /**
-  *  rename the input box 
+  * rename the input box 
   * @param {event} event 
   */
   const OnChangeEditName = (event) => {
     setEditName(event.target.value);
   };
+
+  /**
+   *  tree View onClick folder show right side folders
+   */
+  // treeId
+  const allDataFolder = [];
+  const data = [];
+  if (!treeId) {
+    allDataFolder.push(allFoldres);
+  } else {
+    allFoldres.forEach((folders) => {
+      folders.children.forEach((i) => {
+        data.push(i);
+        allDataFolder.push(data);
+      })
+    })
+  }
+  console.log(allDataFolder);
+
+
+
 
   return (
     <div>
@@ -200,7 +222,7 @@ export default function RightSideBar({
         {/*  end the tag search bar */}
         <div className="card-body rows4" style={{ flexWrap: 'wrap' }}>
           {/*  folders map  */}
-          {allFoldres.slice(0, visible).map((items) => {
+          {allDataFolder[0].slice(0, visible).map((items) => {
             return <div key={items.id} className="card col-md-5" align='left'
               style={{
                 width: '12rem',
@@ -210,25 +232,27 @@ export default function RightSideBar({
               }}>
               <div className="card-body">
                 <div className="text-center text-black">
-                  {items.type === 'Folder' &&
+                  {items.type === 'File' ? (
+                    <i
+                      className="fa fa-file  pointer"
+                      style={{ fontSize: '110px' }}
+                    />
+                  ) : (
                     <i
                       className="fa fa-folder pointer"
                       style={{ fontSize: '110px' }}
                       onClick={() => handleClickNestedFolders(items)}
                     />
-                  }
-                  {items.type === 'File' &&
-                    <i
-                      className="fa fa-file  pointer"
-                      style={{ fontSize: '110px' }}
-                    />
-                  }
+                  )}
                 </div>
               </div>
               <div className="card-footer bg-black border-black text-white cards">
                 <div style={{ fontSize: '10px' }}>
-                  {items.type === 'Folder' && <p className="name">{items.name}</p>}
-                  {items.type === 'File' && <p className="name">{items.type}</p>}
+                  {items.type === 'File' ? (
+                    <p className="name">{items.type}</p>
+                  ) : (
+                    <p className="name">{items.name}</p>
+                  )}
                   <p className="date">{items.date}</p>
                 </div>
                 <p>
