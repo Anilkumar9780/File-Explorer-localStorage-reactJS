@@ -44,8 +44,9 @@ export default function RightSideBar({
   const [visible, setVisible] = useState(3);
 
   /**
-   * 
-   * @param {Folder id} ids 
+   *  open modle
+   * @param {object} items 
+   * @param {number} foldersid 
    */
   const openModel = (items, foldersid) => {
     setSelectFolderId(foldersid);
@@ -53,8 +54,8 @@ export default function RightSideBar({
   };
 
   /**
-   * search Folders (name)
-   * @param {event} event
+   * 
+   * @param {string} searchedVal 
    */
   const handleOnSearchFolderName = (searchedVal) => {
     const filteredFolders = allFoldres.filter((folders) => {
@@ -115,8 +116,8 @@ export default function RightSideBar({
 
   /**
    * delete nested Folders 
-   * @param {getFolders} getFolders 
-   * @param {NestedFolders} NestedFolders 
+   * @param {object} getFolders 
+   * @param {object} NestedFolders 
    */
   const handleOnClickDeleteFolders = (getFolders, NestedFolders) => {
     getFolders.reduce((key, item, index) => {
@@ -137,8 +138,8 @@ export default function RightSideBar({
 
   /**
    * Rename Folder Name  value set the input box
-   * @param {getFolders} getFolders 
-   * @param {nestedFolders} nestedFolders 
+   * @param {object} getFolders 
+   * @param {object} nestedFolders 
    */
   const handleOnClickRenameFolder = (getFolders, nestedFolders) => {
     // setEditName(editName);
@@ -170,23 +171,22 @@ export default function RightSideBar({
   /**
    *  tree View onClick folder show right side folders
    */
-  // treeId
+  // treeId    
   const allDataFolder = [];
   const data = [];
   if (!treeId) {
     allDataFolder.push(allFoldres);
   } else {
     allFoldres.forEach((folders) => {
-      folders.children.forEach((i) => {
-        data.push(i);
-        allDataFolder.push(data);
-      })
+      if (folders.id === treeId) {
+        folders.children.forEach((nestedData) => {
+          data.push(nestedData);
+          allDataFolder.push(data);
+        })
+      }
     })
   }
   console.log(allDataFolder);
-
-
-
 
   return (
     <div>

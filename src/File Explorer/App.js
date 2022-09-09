@@ -31,8 +31,7 @@ function App() {
   const [allFoldres, setAllFolders] = useState([]);
   const [folderId, setFolderId] = useState();
   const [treeId, setTreeId] = useState();
-  console.log(treeId);
-  
+
   /**
    * set getFolders in LocalStorage
    */
@@ -75,7 +74,7 @@ function App() {
 
   /**
    * set Nested Folders and map Folders
-   * @param {items} items 
+   * @param {object} allFolders
    */
   const handleClickNestedFolders = (allFolders) => {
     setFolderId(allFolders.id);

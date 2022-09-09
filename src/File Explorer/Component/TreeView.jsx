@@ -4,15 +4,19 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
-function App({ data, setTreeId,treeId }) {
+function App({ data, setTreeId, treeId }) {
 
+  /**
+   *  set id tree struc
+   * @param {string} id 
+   */
   const treeDisplay = (id) => {
     setTreeId(id);
   };
 
   /**
    * display tree view using recursion
-   * @param {treeItems} treeItems 
+   * @param {object} treeItems 
    * @returns array
    */
   const getTreeItemsFromData = treeItems => {
@@ -23,7 +27,7 @@ function App({ data, setTreeId,treeId }) {
       }
       return (
         <TreeItem
-          onClick={() => treeDisplay(treeItemData, 'children')}
+          onClick={() => treeDisplay(treeItemData.id)}
           key={treeItemData.id}
           nodeId={treeItemData.id}
           children={children}
@@ -36,7 +40,7 @@ function App({ data, setTreeId,treeId }) {
 
   /**
    * display tree view using recursion
-   * @param {treeItems} param0 
+   * @param {object} treeItems
    * @returns array
    */
   const DataTreeView = ({ treeItems }) => {

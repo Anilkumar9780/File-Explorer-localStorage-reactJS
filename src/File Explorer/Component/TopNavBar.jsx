@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileUpload, faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Dialog } from '@material-ui/core';
 
@@ -27,13 +25,13 @@ export default function Navbar({
   const [inputFolderName, setInputFolderName] = useState('');
   const [inputFileUpload, setInputFileUpload] = useState('');
 
- /**
-  * handle submit Folders add
-  * @param {allData} getFolders 
-  * @param {nestedkey} nestedkey
-  * @returns add new folder
-  */
-  const handleSubmitFolders = (getFolders,nestedkey) => {
+  /**
+   * handle submit Folders add
+   * @param {object} getFolders 
+   * @param {object} nestedkey
+   * @returns 
+   */
+  const handleSubmitFolders = (getFolders, nestedkey) => {
     //create objects
     const folders = {
       id: Math.floor(Math.random() * 100),
@@ -68,14 +66,14 @@ export default function Navbar({
 
   /**
    *  handle submit Files add
-   * @param {alldata} getFolders 
-   * @param {nesterkey} nestedkey 
-   * @returns new add file
+   * @param {object} getFolders 
+   * @param {object} nestedkey 
+   * @returns 
    */
-  const handleSubmitFiles = (getFolders,nestedkey) => {
+  const handleSubmitFiles = (getFolders, nestedkey) => {
     // create objects
     const file = {
-      id: Math.floor(Math.random() * 1000),
+      id: Math.floor(Math.random() * 100),
       name: inputFileUpload,
       date: new Date().toLocaleString(),
       type: 'File',
@@ -120,7 +118,7 @@ export default function Navbar({
   const handleOnChangeFileUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
-    setInputFileUpload(URL.createObjectURL(file));
+    setInputFileUpload(file.createObjectURL(file));
   };
 
   /**
@@ -129,6 +127,16 @@ export default function Navbar({
   const onReload = () => {
     window.location.reload(false);
   }
+
+  /**
+   *  autofocus  input box 
+   * @param {string} input 
+   */
+  const autoFocusUserFolderNameInputField = (input) => {
+    if (input) {
+      setTimeout(() => { input.focus() }, 100);
+    }
+  };
 
   return (
     <div>
@@ -145,8 +153,7 @@ export default function Navbar({
             <Dialog open={openCreateFolderFrom} onClose={handleCancelFrom}>
               <DialogTitle>Create Folder</DialogTitle>
               <DialogContent>
-                <TextField
-                  autoFocus
+                <input
                   margin="dense"
                   id="name"
                   onChange={handleOnChangeInputText}
@@ -155,15 +162,16 @@ export default function Navbar({
                   label="Folder Name"
                   type="text"
                   fullWidth
+                  ref={autoFocusUserFolderNameInputField}
                   variant="standard"
                 />
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => handleSubmitFolders(getFolders, 'children')} >Add</Button>
-                <Button onClick={handleCancelFrom} > Cancel</Button>
+                <Button onClick={handleCancelFrom}> Cancel</Button>
               </DialogActions>
             </Dialog>
-          {/*  end tag open model button new Folder  */}
+            {/*  end tag open model button new Folder  */}
             {' '}
             {/*  start tag open model button  File Uploading*/}
             <Button variant="outlined" className="text-black" onClick={handleOpenFileUploadFrom}>
@@ -174,14 +182,12 @@ export default function Navbar({
             <Dialog open={openUploadFileFrom} onClose={handleCancelFrom}>
               <DialogTitle>File Upload</DialogTitle>
               <DialogContent>
-                <DialogContentText>
-                  File Upload
-                </DialogContentText>
-                <TextField
+                <input
                   autoFocus
                   margin="dense"
                   id="name"
                   onChange={handleOnChangeFileUpload}
+                  ref={autoFocusUserFolderNameInputField}
                   placeholder="File Upload.."
                   label="File Upload"
                   type="file"
@@ -190,7 +196,7 @@ export default function Navbar({
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={()=>handleSubmitFiles(getFolders, 'children')}>Add</Button>
+                <Button onClick={() => handleSubmitFiles(getFolders, 'children')}>Add</Button>
                 <Button onClick={handleCancelFrom}>Cancel</Button>
               </DialogActions>
             </Dialog>
