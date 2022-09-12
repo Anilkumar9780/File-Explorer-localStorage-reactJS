@@ -21,8 +21,9 @@ export default function Navbar({
   //input value
   getFolders,
   folderId,
+  inputFolderName, 
+  setInputFolderName
 }) {
-  const [inputFolderName, setInputFolderName] = useState('');
   const [inputFileUpload, setInputFileUpload] = useState('');
 
   /**

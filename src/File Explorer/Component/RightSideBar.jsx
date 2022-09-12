@@ -142,7 +142,6 @@ export default function RightSideBar({
    * @param {object} nestedFolders 
    */
   const handleOnClickRenameFolder = (getFolders, nestedFolders) => {
-    // setEditName(editName);
     const enteredName = editName;
     getFolders.reduce((key, item) => {
       if (key) {

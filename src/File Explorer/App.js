@@ -28,6 +28,7 @@ function App() {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [editFolderFrom, setEditFolderFrom] = useState(false);
   const [detailPage, setDetailPage] = useState(false);
+  const [inputFolderName, setInputFolderName] = useState('');
   const [allFoldres, setAllFolders] = useState([]);
   const [folderId, setFolderId] = useState();
   const [treeId, setTreeId] = useState();
@@ -70,6 +71,7 @@ function App() {
     setDetailPage(false);
     setDeleteConfirmation(false);
     setEditFolderFrom(false);
+    setOpenUploadFileFrom(null);
   };
 
   /**
@@ -121,13 +123,15 @@ function App() {
             allFoldres={allFoldres}
             // folders id 
             folderId={folderId}
+            // input Folder box state
+            inputFolderName={inputFolderName}
+            setInputFolderName={setInputFolderName}
           />
           {/* passing prpos LeftSideBar Component */}
           <LeftSideBar
             getFolders={getFolders}
             treeId={treeId}
             setTreeId={setTreeId}
-
           />
           {/* passing props RightSiderBar Component */}
           <RightSideBar
@@ -158,18 +162,13 @@ function App() {
             setDeleteConfirmation={setDeleteConfirmation}
             // selete Folders id
             // selectFolderId={selectFolderId}
-            //
             editFolderFrom={editFolderFrom}
             setEditFolderFrom={setEditFolderFrom}
             handleEditModleFrom={handleEditModleFrom}
-          // editName={editName}
-          // setEditName={setEditName}
-          // editsName={editsName}
           />
         </div>
       </div>
     </div>
   );
 }
-
 export default App;
